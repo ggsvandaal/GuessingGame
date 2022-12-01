@@ -10,3 +10,4 @@ git push origin main
 How to convert a directory to a new computer
 git clone https://github.com/ggsvandaal/Svandaal-Class.git
 cd Svandaal-Class/
+git pull origin main
