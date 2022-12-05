@@ -8,8 +8,6 @@ VG::VG(int Type, char* Title, int Year, char* Publisher, float Rating):Media(Typ
   strcpy(publisher, Publisher);
   rating = Rating;
   type = 1;
-  //cout << publisher << endl;
-  //cout << rating << endl;
 };
 
 char* VG::getPublisher() {
