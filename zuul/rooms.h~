@@ -1,8 +1,0 @@
-#include <iostream>
-#inlcude <cstring>
-
-using namespace std;
-
-class room {
-  
-};
