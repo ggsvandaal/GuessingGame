@@ -24,10 +24,10 @@ Room* Room::getExit(char* direction) {
 }
 
 char* Room::getExitString() {
-  
+  char exitString[80];
+  return exitString;
 }
 
 bool Room::hasExit(char* direction) {
-  
+  return false;
 }
-
