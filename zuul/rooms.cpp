@@ -11,6 +11,10 @@ Room::Room(char* Name, int Number) {
   number = Number;
 };
 
+int Room::getNumber() {
+  return number;
+}
+
 char* Room::getName() {
   return name;
 }
@@ -23,11 +27,14 @@ Room* Room::getExit(char* direction) {
   return exits[direction];
 }
 
-char* Room::getExitString() {
-  char exitString[80];
-  return exitString;
-}
-
 bool Room::hasExit(char* direction) {
   return false;
+}
+
+void Room::addInventory(char* item) {
+  inventory.addItem(item);
+}
+
+void Room::removeInventory(char* item) {
+  inventory.removeItem(item);
 }

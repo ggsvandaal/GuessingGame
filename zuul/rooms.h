@@ -2,6 +2,7 @@
 #include <cstring>
 #include <vector>
 #include <map>
+#include "inventory.h"
 
 using namespace std;
 
@@ -14,10 +15,11 @@ public:
   Room* getExit(char* direction);
   char* getExitString();
   bool hasExit(char* direction);
-  
+  void addInventory(char* item);
+  void removeInventory(char* item);
 protected:
   int number;
   char name[80];
-  //Inventory inventory;
+  Inventory inventory;
   map<char*, Room*> exits;
 };
