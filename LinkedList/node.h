@@ -1,16 +1,18 @@
 #include <iostream>
 #include <cstring>
+#include "student.h"
 
 using namespace std;
 
-class Node {
+class Node { // Node Class
 public:
-  Node(int Value);
-  ~Node();
-  int getValue();
-  void setNext(Node*);
-  Node* getNext();
+  Node(Student* Student); // Node Constructor
+  ~Node(); // Destructor
+  Student* getStudent(); // get student*
+  void setNext(Node*); // Set the next node
+  Node* getNext(); // Get the next node
 private:
-  int value;
   Node* next;
+  Student* student;
 };
+

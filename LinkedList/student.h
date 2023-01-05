@@ -1,3 +1,5 @@
+#ifndef STUDENT
+#define STUDENT
 #include <iostream>
 #include <cstring>
 
@@ -17,3 +19,4 @@ private:
   int id;
   float gpa;
 };
+#endif

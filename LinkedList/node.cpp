@@ -1,22 +1,28 @@
 #include <iostream>
 #include <cstring>
 #include "node.h"
+#include "student.h"
+
 
 using namespace std;
 
-Node::Node(int Value) {
-  value = Value;
+Node::Node(Student* Student) {
+  student = Student;
 };
 
-int Node::getValue() {
-  return value;  
+Student* Node::getStudent() {
+  return student;  
 }
 
 
 Node* Node::getNext() {
-
+  return next;
 }
 
-void Node::setNext() {
+void Node::setNext(Node* Next) {
+  next = Next;
+}
 
+void Node::~Node() {
+  delete student;
 }
