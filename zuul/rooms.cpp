@@ -6,17 +6,12 @@
 
 using namespace std;
 
-Room::Room(char* Name, int Number) {
-  strcpy(name, Name);
+Room::Room(int Number) {
   number = Number;
 };
 
 int Room::getNumber() {
   return number;
-}
-
-char* Room::getName() {
-  return name;
 }
 
 void Room::setExit(char* direction, Room* room) {
@@ -32,9 +27,13 @@ bool Room::hasExit(char* direction) {
 }
 
 void Room::addInventory(char* item) {
-  inventory.addItem(item);
+  inventory -> addItem(item);
 }
 
 void Room::removeInventory(char* item) {
-  inventory.removeItem(item);
+  inventory -> removeItem(item);
+}
+
+void Room::printItems() {
+  inventory -> printInventory();
 }

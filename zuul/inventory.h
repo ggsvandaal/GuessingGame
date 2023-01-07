@@ -1,6 +1,5 @@
-#ifndef inventory
-#define inventory
-
+#ifndef INVENTORY
+#define INVENTORY
 #include <iostream>
 #include <cstring>
 #include <vector>
