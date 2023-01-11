@@ -26,3 +26,8 @@ int Student::getId() {
 float Student::getGPA() {
   return gpa;
 }
+
+Student::~Student() {
+  delete name;
+  delete lastname;
+}

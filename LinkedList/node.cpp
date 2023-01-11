@@ -23,6 +23,6 @@ void Node::setNext(Node* Next) {
   next = Next;
 }
 
-void Node::~Node() {
+Node::~Node() {
   delete student;
 }
