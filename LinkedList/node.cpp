@@ -1,28 +1,54 @@
-#include <iostream>
-#include <cstring>
 #include "node.h"
-#include "student.h"
 
+Node::Node(){
+  student = NULL;
+  next = NULL;
+}
 
-using namespace std;
+Node::Node(Student* studentP){
+  student = studentP;
+  next = NULL;
+}
 
-Node::Node(Student* Student) {
-  student = Student;
-};
-
-Student* Node::getStudent() {
-  return student;  
+Node::~Node(){
+  delete &student;
+  next = NULL;
 }
 
 
-Node* Node::getNext() {
+void Node::setValue(Student* studentP){
+  student = studentP;
+}
+Student* Node::getStudent(){
+  return student;
+}
+
+void Node::setNext(Node* nextP){
+  next = nextP;
+}
+
+Node* Node::getNext(){
   return next;
 }
 
-void Node::setNext(Node* Next) {
-  next = Next;
-}
 
-void Node::~Node() {
-  delete student;
-}
+
+
+/*
+
+class Node {
+  public:
+  Node();
+  Node(Student* studentP);
+  ~Node();
+  
+  Student* getValue();
+  void setNext(Node* nextP);
+  Node* getNext();
+
+  protected: 
+  Student* student;
+  Node* next;
+};
+
+*/
