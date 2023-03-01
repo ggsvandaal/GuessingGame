@@ -1,17 +1,15 @@
 #include <iostream>
 #include <cstring>
 #include "node.h"
-#include "student.h"
-
 
 using namespace std;
 
-Node::Node(Student* Student) {
-  student = Student;
+Node::Node(int Number) {
+  number = Number;
 };
 
-Student* Node::getStudent() {
-  return student;  
+int Node::getNumber() {
+  return number;  
 }
 
 
@@ -24,5 +22,4 @@ void Node::setNext(Node* Next) {
 }
 
 Node::~Node() {
-  delete student;
 }
