@@ -1,7 +1,7 @@
 /*
   Heap
   Author: Samual van Daal
-  Date: 3/1/2023
+  Date: 3/2/2023
 */
 
 #include <iostream>
@@ -15,6 +15,7 @@ void add(int* a, int b); // Add
 void print(int* a, int b, int c); // Print
 void remove(int* a); // Remove Root
 void rmall(int* a); // Remove All
+void addFile(int* a); // Add from file
 
 // Main
 int main() {
@@ -29,7 +30,7 @@ int main() {
     heap[i] = 0;
   }
   heap[0] = -1;
-  cout << "Type INPUT, REMOVE, REMOVE ALL, PRINT" << endl;
+  cout << "Type INPUT, FILE INPUT ,REMOVE ROOT, REMOVE ALL, PRINT, QUIT" << endl;
   bool play = true;
 
   // Main Loop //
@@ -45,6 +46,11 @@ int main() {
       cin >> input;
       cin.ignore(10, '\n');
       add(heap, input); // Add Function
+    }
+
+    // Typed FILE INPUT
+    if (strcmp(ask, "FILE INPUT") == 0) {
+      addFile(heap); // File Input Function
     }
     
     // Typed PRINT
@@ -62,7 +68,7 @@ int main() {
     }
     
     // Typed REMOVE
-    if (strcmp(ask, "REMOVE") == 0) {
+    if (strcmp(ask, "REMOVE ROOT") == 0) {
       remove(heap); // Remove Root Function
     }
     
@@ -113,33 +119,19 @@ void print(int* heap, int depth, int current) {
 
   // Tree Print
   
-  if (heap[current] == 0 && current != 0) {
-    print(heap, depth-1, current/2);
-  }
-
-  if (heap[(current*2)+1] != 0) {
-    current = (current*2)+1;
-    print(heap, depth+1, current);
+  if (heap[(current*2)+1] != 0 && current < 51) { // Checking Right
+    int right = (current*2)+1;
+    print(heap, depth+1, right);
   }
   
-  for (int i = 0; i < depth; i++) {
+  for (int i = 0; i < depth; i++) { // Adding Indents
     cout << '\t';
   }
-  cout << heap[current] << endl;
-  heap[current] = 0;
+  cout << heap[current] << endl; // Printing
   
-  if (heap[current*2] != 0) {
-    current = current*2;
-    print(heap, depth+1, current);
-  }
-
-  if (heap[(current*2)+1] == 0 && heap[current*2] == 0) {
-    heap[current] = 0;
-    current = current/2;
-    
-    if (heap[1] != 0) {
-      print(heap, depth-1, current);
-    }
+  if (heap[current*2] != 0 && current < 51) { //Checking Left
+    int left = current*2;
+    print(heap, depth+1, left);
   }
 }
 
@@ -190,3 +182,34 @@ void rmall(int* heap) {
     heap[i] = 0; // Remove Every value
   }
 }
+
+// Add From File Function //
+
+void addFile(int* heap) {
+  char fileName[80];
+  int place;
+  int num;
+  cout << "What file do you want to add? : ";
+  cin.get(fileName, 80);
+  cin.ignore(10, '\n');
+  ifstream File (fileName);
+  if(File.is_open()) {
+    while (File >> num) { // Running numbers from file
+      for (int i = 1; i < 102; i++) { // Add num from file
+	if (heap[i] == 0) {
+	  heap[i] = num;
+	  place = i;
+	  break;
+	}
+      }
+      for (int i = place; i > 1; i--) { // Loop from index of input -> index of root
+	if (heap[i] > heap[i/2]) { // If child > parent, Swap their places
+	  int temp = heap[i/2];
+	  heap[i/2] = heap[i];
+	  heap[i] = temp;
+	}
+      }
+    }
+  }
+}
+      
