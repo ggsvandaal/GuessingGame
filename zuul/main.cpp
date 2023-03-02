@@ -29,12 +29,16 @@ int main() {
   game.push_back(hospital);
   id = 2;
   Room* library = new Room(l, id);
+  game.push_back(library);
   id = 3;
   Room* bedroom = new Room(b, id);
+  game.push_back(bedroom);
   id = 4;
   Room* office = new Room(o, id);
+  game.push_back(office);
   id = 5;
   Room* kitchen = new Room(k, id);
+  game.push_back(kitchen);
   
   // Setting Room Exits
   hospital -> setExit(north, office);
