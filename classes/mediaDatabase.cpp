@@ -1,3 +1,9 @@
+/*
+  Author: Samual van Daal
+  Date: 12/6/2022
+  
+ */
+
 #include <iostream>
 #include <cstring>
 #include "media.h"
@@ -18,16 +24,11 @@ int main() {
   float rating;
   char artist[80];
   int duration;
-  /*
-  cin >> type;
-  char input[80];
-  cin >> input;
-  int year;
-  cin >> year;
-  database.push_back(new Media(type, input, year));
-  */
+  char director[80];
+  //
   while(true) { // Main Loop
-    cout << "Do you want to ADD, SEARCH, or DELETE?" << endl;
+    cin.clear();
+    cout << "Do you want to ADD, SEARCH, DELETE, or QUIT?" << endl;
     cin.get(input, 80);
     cin.ignore(10, '\n');
     if (input[0] == 'A' && input[1] == 'D' && input[2] == 'D') {
@@ -69,7 +70,22 @@ int main() {
 	database.push_back(new Music(type, title, year, publisher, duration, artist));
       }
       else if (type == 3) { // Movie Add
-
+	cout << "What is the title of the movie?" << endl;
+	cin.get(title, 80);
+	cin.ignore(10, '\n');
+	cout << "Who is the director?" << endl;
+	cin.get(director, 80);
+	cin.ignore(10, '\n');
+	cout << "What year was it released?" << endl;
+	cin >> year;
+	cin.ignore(10, '\n');
+	cout << "How long is it? (in minutes)" << endl;
+	cin >> duration;
+	cin.ignore(10, '\n');
+	cout << "What is its rating? (_._ / 10)" << endl;
+	cin >> rating;
+	cin.ignore(10, '\n');
+	database.push_back(new Movie(type, title, year, director, duration, rating));
       }
       else {
 
@@ -110,6 +126,16 @@ int main() {
 		   << (a) -> getDuration() << " seconds long, Publisher: "
                    << (a) -> getPublisher() << endl;
 	    }
+	     else if ((*itr) -> getType() == 3) {
+              cout << endl;
+              Movie* a = static_cast<Movie*>(*itr);
+              cout << "Movie, "
+                   << (*itr) -> getTitle() << ", Director: "
+                   << (a) -> getDirector() << ", Release Date: "
+                   << (*itr) -> getYear() << ", Song Length: "
+                   << (a) -> getDuration() << " seconds long, Rating: "
+                   << (a) -> getRating() << endl;
+            }
 	  }
 	}
 	cout << endl;
@@ -144,6 +170,16 @@ int main() {
                    << (a) -> getDuration() << " seconds long, Publisher: "
                    << (a) -> getPublisher() << endl;
             }
+	    else if ((*itr) -> getType() == 3) {
+              cout << endl;
+              Movie* a = static_cast<Movie*>(*itr);
+              cout << "Movie, "
+                   << (*itr) -> getTitle() << ", Director: "
+                   << (a) -> getDirector() << ", Release Date: "
+                   << (*itr) -> getYear() << ", Song Length: "
+                   << (a) -> getDuration() << " seconds long, Rating: "
+                   << (a) -> getRating() << endl;
+            }
 	  }
 	} 
 	cout << endl;
@@ -168,9 +204,49 @@ int main() {
 	    char* search;
 	    search = strstr((*itr) -> getTitle(), keyword);
 	    if (search != NULL) {
-	      database.erase(itr);
-	      delete (*itr);
-	      break;
+	      cout << "About to Delete: ";
+	      if ((*itr) -> getType() == 1) {
+		cout << endl;
+		VG* a = static_cast<VG*>(*itr);
+		cout << "Video Game, "
+		     << (*itr) -> getTitle() << ", Release Date: "
+		     << (*itr) -> getYear() << ", Publisher: "
+		     << (a) -> getPublisher() << ", Rating: "
+		     << (a) -> getRating() << endl;
+	      }
+	      else if ((*itr) -> getType() == 2) {
+		cout << endl;
+		Music* a = static_cast<Music*>(*itr);
+		cout << "Song, "
+		     << (*itr) -> getTitle() << ", Artist: "
+		     << (a) -> getArtist() << ", Release Date: "
+		     << (*itr) -> getYear() << ", Song Length: "
+		     << (a) -> getDuration() << " seconds long, Publisher: "
+		     << (a) -> getPublisher() << endl;
+	      }
+	      else if ((*itr) -> getType() == 3) {
+		cout << endl;
+		Movie* a = static_cast<Movie*>(*itr);
+		cout << "Movie, "
+		     << (*itr) -> getTitle() << ", Director: "
+		     << (a) -> getDirector() << ", Release Date: "
+		     << (*itr) -> getYear() << ", Song Length: "
+		     << (a) -> getDuration() << " seconds long, Rating: "
+		     << (a) -> getRating() << endl;
+	      }
+	      else {
+		cout << "ERROR" << endl;
+	      }
+	      cout << "Confirm Deletion? y/n" << endl;
+	      char confirm[2];
+	      cin.get(confirm, 2);
+	      cin.ignore(10, '\n');
+	      if (confirm[0] == 'y') {
+		database.erase(itr);
+		delete (*itr);
+		break;
+	      }
+	      //cin.clear();
 	    }
 	  }
 	}
@@ -187,13 +263,56 @@ int main() {
 	    size--;
 	    int search;
 	    if ((*itr) -> getYear() == keydate) {
-	      database.erase(itr);
-	      delete (*itr);
-	      break;
+	       cout << "About to Delete: ";
+	       if ((*itr) -> getType() == 1) {
+		 cout << endl;
+		 VG* a = static_cast<VG*>(*itr);
+		 cout << "Video Game, "
+		      << (*itr) -> getTitle() << ", Release Date: "
+		      << (*itr) -> getYear() << ", Publisher: "
+		      << (a) -> getPublisher() << ", Rating: "
+		      << (a) -> getRating() << endl;
+	       }
+	       else if ((*itr) -> getType() == 2) {
+		 cout << endl;
+		 Music* a = static_cast<Music*>(*itr);
+		 cout << "Song, "
+		      << (*itr) -> getTitle() << ", Artist: "
+		      << (a) -> getArtist() << ", Release Date: "
+		      << (*itr) -> getYear() << ", Song Length: "
+		      << (a) -> getDuration() << " seconds long, Publisher: "
+		      << (a) -> getPublisher() << endl;
+	       }
+	       else if ((*itr) -> getType() == 3) {
+		 cout << endl;
+		 Movie* a = static_cast<Movie*>(*itr);
+		 cout << "Movie, "
+		      << (*itr) -> getTitle() << ", Director: "
+		      << (a) -> getDirector() << ", Release Date: "
+		      << (*itr) -> getYear() << ", Song Length: "
+		      << (a) -> getDuration() << " seconds long, Rating: "
+		      << (a) -> getRating() << endl;
+	       }
+	       else {
+		 cout << "ERROR" << endl;
+	       }
+	       cout << "Confirm Deletion? y/n" << endl;
+	       char confirm[2];
+	       cin.get(confirm, 2);
+	       cin.ignore(10, '\n');
+	       if (confirm[0] == 'y') {
+		 database.erase(itr);
+		 delete (*itr);
+		 break;
+	       }
+	       //cin.clear();
 	    }
 	  }
 	}
       }
+    }
+    else if (input[0] == 'Q' && input[1] == 'U' && input[2] == 'I' && input[3] == 'T' ) {
+      return false;
     }
   }
 }
