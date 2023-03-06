@@ -1,3 +1,5 @@
+#ifndef NODE
+#define NODE
 #include <iostream>
 #include <cstring>
 
@@ -21,3 +23,4 @@ private:
   char value;
 };
 
+#endif

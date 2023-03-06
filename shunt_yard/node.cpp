@@ -5,7 +5,10 @@
 using namespace std;
 
 Node::Node(char Value) {
-  value = Value
+  value = Value;
+  right = NULL;
+  left = NULL;
+  prev = NULL;
 };
 
 char Node::getValue() {
@@ -38,5 +41,4 @@ void Node::setPrev(Node* Prev) {
 }
 
 Node::~Node() {
-  delete student;
 }
