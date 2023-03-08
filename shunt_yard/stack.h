@@ -8,7 +8,7 @@ using namespace std;
 class Stack {
 public:
   Stack();
-  ~Stack();
+  //~Stack();
   void push(Node*);
   char pop(Node*);
   char peek();

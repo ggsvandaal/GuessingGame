@@ -12,26 +12,31 @@ Queue::Queue() {
 void Queue::enqueue(Node* input) {
   if (tail == NULL) {
     tail = input;
+    char equation[80];
     head = input;
   }
   else {
     Node* temp = tail;
     tail = input;
-    temp.setLeft(tail);
-    tail.setPrev(temp);
+    temp -> setLeft(tail);
+    tail -> setPrev(temp);
   }
 }
 
-Node* Queue::dequeue() {
+char Queue::dequeue() {
   if (head == NULL) {
-    cout << "Queue is empty" endl;
+    cout << "Queue is empty" << endl;
+    return ' ';
   }
   else {
     Node* temp = head;
+    char v = head -> getValue();
     head = head -> getLeft();
-    return temp;
+    delete temp;
+    return v;
   }
 }
 
-char peek() {
+char Queue::peek() {
+  return head -> getValue();
 }
