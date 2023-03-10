@@ -10,7 +10,7 @@ public:
   Stack();
   //~Stack();
   void push(Node*);
-  char pop(Node*);
+  char pop();
   char peek();
 private:
   Node* head;

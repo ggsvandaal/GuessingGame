@@ -19,21 +19,32 @@ void Stack::push(Node* input) {
   }
 }
 
-char Stack::pop(Node* input) {
+char Stack::pop() {
   if (head == NULL) {
     cout << "Stack is empty" << endl;
     return ' ';
   }
   else {
-    char temp = head -> getValue();
-    Node* temps = head;
-    head = head -> getLeft();
-    delete temps;
-    return temp;
+    if (head -> getLeft() != NULL) {
+      char temp = head -> getValue();
+      Node* temps = head;
+      head = head -> getLeft();
+      delete temps;
+      return temp;
+    }
+    else {
+      head = NULL;
+      return ' ';
+    }
   }
 }
 
 char Stack::peek() {
-  return head -> getValue();
+  if (head != NULL) {
+    return head -> getValue();
+  }
+  else {
+    return '$';
+  }
 }
 

@@ -38,5 +38,10 @@ char Queue::dequeue() {
 }
 
 char Queue::peek() {
-  return head -> getValue();
+  if (head != NULL) {
+    return head -> getValue();
+  }
+  else {
+    return '$';
+  }
 }
