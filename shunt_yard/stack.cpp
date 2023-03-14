@@ -22,19 +22,20 @@ void Stack::push(Node* input) {
 char Stack::pop() {
   if (head == NULL) {
     cout << "Stack is empty" << endl;
-    return ' ';
+    return '$';
   }
   else {
+    char temp = head -> getValue();
+    Node* temps = head;
     if (head -> getLeft() != NULL) {
-      char temp = head -> getValue();
-      Node* temps = head;
+      //cout << head -> getLeft() -> getValue() << endl;
       head = head -> getLeft();
       delete temps;
       return temp;
     }
     else {
       head = NULL;
-      return ' ';
+      return temp;
     }
   }
 }

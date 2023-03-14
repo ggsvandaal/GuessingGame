@@ -9,7 +9,8 @@ class Node { // Node Class
 public:
   Node(char Value); // Node Constructor
   ~Node(); // Destructor
-  char getValue(); // get student*
+  char getValue(); // get value of node
+  void setValue(char); // set value of node
   void setRight(Node*); // Set the right node
   void setLeft(Node*); // Set the left node
   void setPrev(Node*); // Set the previous node

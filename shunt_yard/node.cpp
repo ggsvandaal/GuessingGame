@@ -11,6 +11,11 @@ Node::Node(char Value) {
   prev = NULL;
 };
 
+void Node::setValue(char input) {
+  value = input;
+}
+		     
+
 char Node::getValue() {
   return value;  
 }
