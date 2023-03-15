@@ -23,17 +23,15 @@ void Queue::enqueue(Node* input) {
   }
 }
 
-char Queue::dequeue() {
+Node* Queue::dequeue() {
   if (head == NULL) {
     cout << "Queue is empty" << endl;
-    return ' ';
+    return NULL;
   }
   else {
     Node* temp = head;
-    char v = head -> getValue();
     head = head -> getLeft();
-    delete temp;
-    return v;
+    return temp;
   }
 }
 

@@ -10,7 +10,7 @@ public:
   Queue();
   //~Queue();
   void enqueue(Node*);
-  char dequeue();
+  Node* dequeue();
   char peek();
 private:
   Node* tail;

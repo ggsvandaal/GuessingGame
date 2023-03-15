@@ -15,7 +15,7 @@ void Stack::push(Node* input) {
   else {
     Node* temp = head;
     head = input;
-    head -> setLeft(temp);
+    head -> setNext(temp);
   }
 }
 
@@ -26,10 +26,10 @@ char Stack::pop() {
   }
   else {
     char temp = head -> getValue();
-    Node* temps = head;
-    if (head -> getLeft() != NULL) {
+    if (head -> getNext() != NULL) {
+      Node* temps = head;
       //cout << head -> getLeft() -> getValue() << endl;
-      head = head -> getLeft();
+      head = head -> getNext();
       delete temps;
       return temp;
     }

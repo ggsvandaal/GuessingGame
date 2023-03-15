@@ -4,35 +4,67 @@
 #include "stack.h"
 #include "queue.h"
 
-void alg(char* a, char* b, Stack c, Queue d);
+void alg(char* a, char* b, Stack c, Queue* d);
 bool pcheck(char a, char b);
-void build(Queue a, Node* b);
+void build(Queue* a, Stack b, Node* c);
+void postf(Node* a);
+void pref(Node* a);
 
 using namespace std;
 
 int main() {
   Stack stack;
-  Queue queue;
+  Queue* queue = new Queue();
   char input[80];
   char equation[80];
   char postfix[80];
-  Node* root;
+  Node* root = NULL;
   for (int i = 0; i < 80; i++) {
     postfix[i] = '\0';
   }
-  cout << "Do you want to INPUT, or find the PREFIX/INFIX/POSTFIX?" << endl;
-  cin.get(input, 80);
-  cin.ignore(10, '\n');
-  if (strcmp(input, "INPUT") == 00) {
-    cout << "Input an infix equation!" << endl;
-    cin.get(equation, 80);
+  equation[0] = '\0';
+  while(true) {
+    cout << "Do you want to INPUT, or find the PREFIX/INFIX/POSTFIX, or QUIT?" << endl;
+    cin.get(input, 80);
     cin.ignore(10, '\n');
-    alg(equation, postfix, stack, queue);
-    build(queue, root);
-  } 
+    if (strcmp(input, "INPUT") == 0) {
+      cout << "Input an infix equation!" << endl;
+      cin.get(equation, 80);
+      cin.ignore(10, '\n');
+      alg(equation, postfix, stack, queue);
+      build(queue, stack, root);
+    }
+
+    if (strcmp(input, "POSTFIX") == 0) {
+    }
+    
+    if (strcmp(input, "INFIX") == 0) {
+      if (equation[0] != '\0') {
+	for (int i = 0; i < 81; i++) {
+	  if (equation[i] != '\0') {
+	    cout << equation[i];
+	  }
+	  else {
+	    break;
+	  }
+	}
+	cout << endl;
+      }
+      else {
+	cout << "No equation entered" << endl;
+      }
+    }
+
+    if (strcmp(input, "PREFIX") == 0) {
+    }
+    
+    if (strcmp(input, "QUIT") == 0) {
+      break;
+    }
+  }
 }
 
-void alg(char* input, char* output, Stack stack, Queue queue) {
+void alg(char* input, char* output, Stack stack, Queue* queue) {
   int place = 0;
   for (int i = 0; i < 80; i++) {
     char variable = input[i];
@@ -48,7 +80,7 @@ void alg(char* input, char* output, Stack stack, Queue queue) {
 	if (stack.peek() != '$') {
 	  char temp = stack.pop();
 	  Node* place = new Node(temp);
-	  queue.enqueue(place);
+	  queue -> enqueue(place);
 	  Node* node = new Node(variable);
 	  stack.push(node);
 	  //cout << "pcheck false" << endl;
@@ -67,7 +99,7 @@ void alg(char* input, char* output, Stack stack, Queue queue) {
     
     else if (isdigit(variable) == true) {
       Node* add = new Node(variable);
-      queue.enqueue(add);
+      queue -> enqueue(add);
       //cout << "isdigit" << endl;
     }
     else if (variable == ')') {
@@ -77,7 +109,7 @@ void alg(char* input, char* output, Stack stack, Queue queue) {
 	if (temp != '(') {
 	  //cout << temp << endl;
 	  Node* place = new Node(temp);
-	  queue.enqueue(place);
+	  queue -> enqueue(place);
 	  //cout << ") check" << endl;
 	}
 	else {
@@ -88,15 +120,17 @@ void alg(char* input, char* output, Stack stack, Queue queue) {
     //cout << stack.peek() << endl;
     //cout << "for" << endl;
   }
+  int i = 0;
   while(stack.peek() != '$') {
     //cout << "placing stack" << endl;
     char temps = stack.pop();
     //cout << int(temps) << endl;
     Node* places = new Node(temps);
-    queue.enqueue(places);
+    queue -> enqueue(places);
   }
-  int i = 0;
-  while(queue.peek() != '$') {
+  cout << queue -> peek() << endl;
+  
+  /*while(queue.peek() != '$') {
     //cout << "print" << endl;
     int out = queue.dequeue();
     //cout << char(out) << endl;
@@ -104,11 +138,11 @@ void alg(char* input, char* output, Stack stack, Queue queue) {
     i++;
   }
   for (int j = 0; j <= i; j++) {
-    cout << output[j] << " ";
-    Node* node = new Node(output[j]);
-    queue.enqueue(node);
+  cout << output[j] << " ";
+  Node* node = new Node(output[j]);
+  queue.enqueue(node);
   }
-  cout << endl;
+  cout << endl;*/
 }
 
 bool pcheck(char head, char add) {
@@ -140,16 +174,63 @@ bool pcheck(char head, char add) {
   }
   //cout << head << " " << add << endl;
   //cout << headp << " " << addp << endl;
-  if (addp >= headp) {
+  if (addp > headp || add == '^') {
     return true;
   }
-  else if (addp < headp) {
+  else if (addp <= headp) {
     return false;
   }
   return true;
 }
 
-void build(Queue queue, Node* root) {
-  root -> setValue(queue.dequeue());
-  
+void build(Queue* queue, Stack stack, Node* root) {
+  cout << queue -> peek() << endl;
+  while (true) {
+    //cout << "no" << endl;
+    char temp = queue -> peek();
+    if (int(temp) >= 48 && int(temp) <= 57) {
+      stack.push(queue -> dequeue());
+      cout << "Digit" << endl;
+    }
+    else if (queue -> peek() == '+' ||
+	     queue -> peek() == '-' ||
+	     queue -> peek() == '*' ||
+	     queue -> peek() == '/' ||
+	     queue -> peek() == '^') {
+      Node* temp = queue -> dequeue();
+      if (queue -> peek() == '$') {
+	root = temp;
+	Node* r = new Node(stack.pop());
+	root -> setRight(r);
+	r -> setPrev(root);
+	Node* l = new Node(stack.pop());
+	root -> setLeft(l);
+	l -> setPrev(root);
+	cout << "root" << endl;
+	break;
+      }
+      else {
+	Node* r = new Node(stack.pop());
+	temp -> setRight(r);
+	r -> setPrev(temp);
+	Node* l = new Node(stack.pop());
+	temp -> setLeft(l);
+	l -> setPrev(temp);
+	stack.push(temp);
+	cout << "branch" << endl;
+      }
+    }
+    else {
+      //cout << "loop" << endl;
+      //Node* a = queue.dequeue();
+      //delete a;
+    }
+  }
+}
+
+void postf (Node* current) {
+  // Similar to heap print ** HINT: USE RECURSION **
+}
+
+void pref (Node* current) {
 }

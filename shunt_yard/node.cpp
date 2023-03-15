@@ -9,6 +9,7 @@ Node::Node(char Value) {
   right = NULL;
   left = NULL;
   prev = NULL;
+  next = NULL;
 };
 
 void Node::setValue(char input) {
@@ -33,6 +34,10 @@ Node* Node::getPrev() {
   return prev;
 }
 
+Node* Node::getNext() {
+  return next;
+}
+
 void Node::setRight(Node* Right) {
   right = Right;
 }
@@ -43,6 +48,10 @@ void Node::setLeft(Node* Left) {
 
 void Node::setPrev(Node* Prev) {
   prev = Prev;
+}
+
+void Node::setNext(Node* Next) {
+  next = Next;
 }
 
 Node::~Node() {
