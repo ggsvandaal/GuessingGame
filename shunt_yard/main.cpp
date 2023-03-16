@@ -1,20 +1,29 @@
+/*
+Author: Samual van Daal
+Date: 3/16/2023
+Project: Shunting Yard Algorithm
+ */
+
 #include <iostream>
 #include <cstring>
 #include "node.h"
 #include "stack.h"
 #include "queue.h"
 
-void alg(char* a, char* b, Stack c, Queue* d);
-bool pcheck(char a, char b);
-void build(Queue* a, Stack b, Node* &c);
-void postf(Node* a);
-void pref(Node* a);
+void alg(char* a, char* b, Stack c, Queue* d); // Algorithm Function
+bool pcheck(char a, char b); // Precedence Check Function
+void build(Queue* a, Stack b, Node* &c); // Binary Tree Build Function
+void postf(Node* a); // Postfix Print Function
+void pref(Node* a); // Prefix Print Function
+void inf(Node* a); // Infix Print Function
+void rtree(Node* a, Node* &b); // Reset Binary Tree Function
 
 using namespace std;
 
+// Main Function //
+
 int main() {
-  Stack stack;
-  Queue* queue = new Queue();
+  // Initialization
   char input[80];
   char equation[80];
   char postfix[80];
@@ -23,231 +32,266 @@ int main() {
     postfix[i] = '\0';
   }
   equation[0] = '\0';
+
+  // Main Loop
   while(true) {
     cout << "Do you want to INPUT, or find the PREFIX/INFIX/POSTFIX, or QUIT?" << endl;
     cin.get(input, 80);
     cin.ignore(10, '\n');
+
+    // Input Entered
     if (strcmp(input, "INPUT") == 0) {
+      Stack stack; // Initialize Stack
+      Queue* queue = new Queue(); // Initialize Queue
       cout << "Input an infix equation!" << endl;
       cin.get(equation, 80);
       cin.ignore(10, '\n');
-      alg(equation, postfix, stack, queue);
-      build(queue, stack, root);
-      postf(root);
+      rtree(root, root); // To Reset Tree Function
+      alg(equation, postfix, stack, queue); // To Algorithm Function
+      build(queue, stack, root); // To Build Tree Function
+      cout << "Postfix: ";
+      postf(root); // To Postfix Function
       cout << endl;
+      // Reset Equation
+      for (int i = 0; i < 80; i++) {
+	equation[i] = '\0';
+      }
     }
 
+    // Postfix Entered
     if (strcmp(input, "POSTFIX") == 0) {
-      postf(root);
+      postf(root); // To Postfix Function
       cout << endl;
     }
-    
+
+    // Infix Entered
     if (strcmp(input, "INFIX") == 0) {
-      if (equation[0] != '\0') {
-	for (int i = 0; i < 81; i++) {
-	  if (equation[i] != '\0') {
-	    cout << equation[i];
-	  }
-	  else {
-	    break;
-	  }
-	}
-	cout << endl;
-      }
-      else {
-	cout << "No equation entered" << endl;
-      }
+      inf(root); // To Infix Function
+      cout << endl;
     }
 
+    // Prefix Entered
     if (strcmp(input, "PREFIX") == 0) {
+      pref(root); // To Prefix Function
+      cout << endl;
     }
-    
+
+    // Quit Entered
     if (strcmp(input, "QUIT") == 0) {
-      break;
+      break; // Leave Main Loop
+    }
+
+    // Reset Input
+    for (int i = 0; i < 80; i++) {
+      input[i] = '\0';
     }
   }
 }
 
+
+// Shunting Yard Algorithm Function //
+
 void alg(char* input, char* output, Stack stack, Queue* queue) {
   int place = 0;
+  // Loop Through Equation Given
   for (int i = 0; i < 80; i++) {
-    char variable = input[i];
-    if (variable == '\0') {
+
+    char variable = input[i]; // Variable to work with
+    if (variable == '\0') { // Checks for the end of the equation
       break;
     }
+    
+    // If an operator is the variable
     if (variable == '*' ||
 	variable == '/' ||
 	variable == '+' ||
 	variable == '-' ||
 	variable == '^') {
+
+      // If new operator is of equal or lower precedence than previous
       if (pcheck(stack.peek(), variable) == false) {
 	if (stack.peek() != '$') {
-	  char temp = stack.pop();
+	  char temp = stack.pop(); // Removes previous operator from stack
 	  Node* place = new Node(temp);
-	  queue -> enqueue(place);
-	  Node* node = new Node(variable);
-	  stack.push(node);
-	  //cout << "pcheck false" << endl;
+	  queue -> enqueue(place); // Places that operator in queue
+	  Node* node = new Node(variable); 
+	  stack.push(node); // Places new operator in stack
 	}
       }
+
+      // If the new operator is of higher precedence than previous
       else if (pcheck(stack.peek(), variable) == true) {
         Node* node = new Node(variable);
-        stack.push(node);
-	//cout << "pcheck true" << endl;
+        stack.push(node); // Places new operator in stack
       }
     }
+
+    // If a left parenthesis is the variable
     else if (variable == '(') {
       Node* node = new Node(variable);
-      stack.push(node);
+      stack.push(node); // Place parenthesis in the stack
     }
-    
+
+    // If the variable is a number
     else if (isdigit(variable) == true) {
       Node* add = new Node(variable);
-      queue -> enqueue(add);
-      //cout << "isdigit" << endl;
+      queue -> enqueue(add); // Place the number in the queue
     }
+
+    // If the variable is a right parenthesis
     else if (variable == ')') {
       bool truth = true;
+      // Loop through stack
       while (truth == true) {
-	char temp = stack.pop();
-	if (temp != '(') {
-	  //cout << temp << endl;
+	char temp = stack.pop(); // Remove top of stack
+	if (temp != '(') { // If top of stack was not a left parenthesis
 	  Node* place = new Node(temp);
-	  queue -> enqueue(place);
-	  //cout << ") check" << endl;
+	  queue -> enqueue(place); // Place top of stack into queue
 	}
-	else {
-	  truth = false;
+	else { // If top of stack was a left parenthesis
+	  truth = false; // End loop
 	}
       }
     }
-    //cout << stack.peek() << endl;
-    //cout << "for" << endl;
+    // End of For loop
   }
-  int i = 0;
-  while(stack.peek() != '$') {
-    //cout << "placing stack" << endl;
-    char temps = stack.pop();
-    //cout << int(temps) << endl;
+  while(stack.peek() != '$') { // While stack isn't empty
+    char temps = stack.pop(); // Remove top of stack
     Node* places = new Node(temps);
-    queue -> enqueue(places);
+    queue -> enqueue(places); // Put top of stack into queue
   }
-  cout << queue -> peek() << endl;
-  
-  /*while(queue.peek() != '$') {
-    //cout << "print" << endl;
-    int out = queue.dequeue();
-    //cout << char(out) << endl;
-    output[i] = out;
-    i++;
-  }
-  for (int j = 0; j <= i; j++) {
-  cout << output[j] << " ";
-  Node* node = new Node(output[j]);
-  queue.enqueue(node);
-  }
-  cout << endl;*/
 }
 
+
+// Precedence Check Function //
+
 bool pcheck(char head, char add) {
-  int headp = 0;
-  int addp = 0;
-  if (head == '+' || head == '-') {
+  int headp = 0; // Head precence
+  int addp = 0; // Add Precedence
+  
+  if (head == '+' || head == '-') { // Head Precedence 1
     headp = 1;
   }
-  else if (head == '*' || head == '/') {
+  else if (head == '*' || head == '/') { // Head Precedence 2
     headp = 2;
   }
-  else if (head == '^') {
+  else if (head == '^') { // Head Precedence 3
     headp = 3;
   }
-  else {
+  else { // Head Precedence 0
     headp = 0;
   }
-  if (add == '+' || add == '-') {
+  if (add == '+' || add == '-') { // Add Precedence 1
     addp = 1;
   }
-  else if (add == '*' || add == '/') {
+  else if (add == '*' || add == '/') { // Add Precedence 2
     addp = 2;
   }
-  else if (add == '^') {
+  else if (add == '^') { // Add Precedence 3
     addp = 3;
   }
-  else if (add == '$') {
+  else if (add == '$') { // Add Precedence 0
     addp = 0;
   }
-  //cout << head << " " << add << endl;
-  //cout << headp << " " << addp << endl;
+  // Add is greater than head or add is '^'
   if (addp > headp || add == '^') {
     return true;
   }
+  // Add is less than or equal to head
   else if (addp <= headp) {
     return false;
   }
   return true;
 }
 
+
+// Build Binary Expression Tree Function //
+
 void build(Queue* queue, Stack stack, Node* &root) {
-  cout << queue -> peek() << endl;
+  // Loop through Queue
   while (true) {
-    //cout << "no" << endl;
     char temp = queue -> peek();
+    
+    // If the top of queue is a number 
     if (int(temp) >= 48 && int(temp) <= 57) {
       Node* n = queue -> dequeue();
-      stack.push(n);
-      cout << "Digit" << endl;
+      stack.push(n); // Put it in stack
     }
+    // If the top of queue is an operator 
     else if (queue -> peek() == '+' ||
 	     queue -> peek() == '-' ||
 	     queue -> peek() == '*' ||
 	     queue -> peek() == '/' ||
 	     queue -> peek() == '^') {
-      Node* temp = queue -> dequeue();
-      if (queue -> peek() == '$') {
-	root = temp;
-	Node* r = stack.treePop();
-	root -> setRight(r);
-	r -> setPrev(root);
-	Node* l = stack.treePop();
-	root -> setLeft(l);
-	l -> setPrev(root);
-	cout << "root" << endl;
-	postf(root);
-	cout << endl;
-	break;
+      Node* temp = queue -> dequeue(); // Put the top of queue into a temp
+      if (queue -> peek() == '$') { // If queue is empty
+	root = temp; // Root is equal to temp
+	Node* r = stack.treePop(); // Make a right node from top of stack
+	root -> setRight(r); // Root right is the right node
+	r -> setPrev(root); // Right node parent is root
+	Node* l = stack.treePop(); // Make a left node from top of stack
+	root -> setLeft(l); // Root left is the left nodee
+	l -> setPrev(root); // Left node paerent is root
+	break; // Tree is complete
       }
-      else {
-	Node* r = stack.treePop();
-	temp -> setRight(r);
-	r -> setPrev(temp);
-	Node* l = stack.treePop();
-	temp -> setLeft(l);
-	l -> setPrev(temp);
-	stack.push(temp);
-	cout << "branch" << endl;
+      else { // If queue isn't empty
+	Node* r = stack.treePop(); // Make a right node from top of stack
+	temp -> setRight(r); // Temp right is the right node
+	r -> setPrev(temp); // Right node parent is temp
+	Node* l = stack.treePop(); // Make a left node from top of stack
+	temp -> setLeft(l); // Temp left is the left node
+	l -> setPrev(temp); // Left node parent is temp
+	stack.push(temp); // Put temp back into the stack
       }
-    }
-    else {
-      //cout << "loop" << endl;
-      //Node* a = queue.dequeue();
-      //delete a;
     }
   }
 }
 
-void postf (Node* current) {
-  // Similar to heap print ** HINT: USE RECURSION **
-  //cout << "post" << endl;
-  //cout << current -> getValue();
-  if (current -> getLeft() != NULL) { // Checking Right
-    postf(current -> getLeft());
-  }
-  if (current -> getRight() != NULL) { //Checking Left
-    //cout << "right" << endl;
-    postf(current -> getRight());
-  }
-  cout << current -> getValue();
+
+// Postfix Print Function //
+
+void postf (Node* current) { // Recursive
+  if (current == NULL) return; // If current is NULL go back
+  postf(current -> getLeft()); // Go to current left
+  postf(current -> getRight()); // Go to current right
+  cout << current -> getValue(); // Print current value
 }
 
-void pref (Node* current) {
+
+// Prefix Print Function // 
+
+void pref (Node* current) { // Recursive
+  if (current == NULL) return; // If current is NULL go back
+  cout << current -> getValue(); // Print current value
+  pref(current -> getLeft()); // Go to current left
+  pref(current -> getRight()); // Go to current right
+}
+
+
+// Infix Print Function //
+
+void inf (Node* current) { // Recursive
+  if (current == NULL) return; // If current is NULL go back
+  cout << "("; // Print (
+  inf(current -> getLeft()); // Go to current left
+  cout << current -> getValue(); // Print current value
+  inf(current -> getRight()); // Go to current right
+  cout << ")"; // Print )
+}
+
+
+// Reset Tree Function //
+
+void rtree(Node* current, Node* &root) { // Recursive
+  // If current is already NULL
+  if (current == NULL) {
+    return; // Go back
+  }
+  // If current left and right are already NULL
+  if (current -> getRight() == NULL && current -> getLeft() == NULL) {
+    current = NULL; // Set current to NULL
+    return; // Go back
+  }
+  rtree(current -> getRight(), root); // Go to right 
+  rtree(current -> getLeft(), root); // Go to left
 }

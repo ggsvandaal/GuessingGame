@@ -18,7 +18,7 @@ void Queue::enqueue(Node* input) {
   else {
     Node* temp = tail;
     tail = input;
-    temp -> setLeft(tail);
+    temp -> setNext(tail);
     tail -> setPrev(temp);
   }
 }
@@ -30,7 +30,7 @@ Node* Queue::dequeue() {
   }
   else {
     Node* temp = head;
-    head = head -> getLeft();
+    head = head -> getNext();
     return temp;
   }
 }

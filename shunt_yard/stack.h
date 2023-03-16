@@ -5,14 +5,13 @@
 
 using namespace std;
 
-class Stack {
+class Stack { // Stack Class
 public:
-  Stack();
-  //~Stack();
-  void push(Node*);
-  char pop();
-  Node* treePop();
-  char peek();
+  Stack(); // Initialize Stack
+  void push(Node*); // Push Node* to stack
+  char pop(); // Pop the top of stack off (char)
+  Node* treePop(); // Pop the top of stack off (Node*)
+  char peek(); // Peek at the top of the stack
 private:
   Node* head;
 };

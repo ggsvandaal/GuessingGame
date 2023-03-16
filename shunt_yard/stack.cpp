@@ -46,15 +46,9 @@ Node* Stack::treePop() {
     return NULL;
   }
   else {
-    Node* temps = head;
-    if (head -> getNext() != NULL) {
-      head = head -> getNext();
-      return temps;
-    }
-    else {
-      head = NULL;
-      return temps;
-    }
+    Node* temp = head;
+    head = head -> getNext();
+    return temp;
   }
 
 }
