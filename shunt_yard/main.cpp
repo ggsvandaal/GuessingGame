@@ -6,7 +6,7 @@
 
 void alg(char* a, char* b, Stack c, Queue* d);
 bool pcheck(char a, char b);
-void build(Queue* a, Stack b, Node* c);
+void build(Queue* a, Stack b, Node* &c);
 void postf(Node* a);
 void pref(Node* a);
 
@@ -33,9 +33,13 @@ int main() {
       cin.ignore(10, '\n');
       alg(equation, postfix, stack, queue);
       build(queue, stack, root);
+      postf(root);
+      cout << endl;
     }
 
     if (strcmp(input, "POSTFIX") == 0) {
+      postf(root);
+      cout << endl;
     }
     
     if (strcmp(input, "INFIX") == 0) {
@@ -183,13 +187,14 @@ bool pcheck(char head, char add) {
   return true;
 }
 
-void build(Queue* queue, Stack stack, Node* root) {
+void build(Queue* queue, Stack stack, Node* &root) {
   cout << queue -> peek() << endl;
   while (true) {
     //cout << "no" << endl;
     char temp = queue -> peek();
     if (int(temp) >= 48 && int(temp) <= 57) {
-      stack.push(queue -> dequeue());
+      Node* n = queue -> dequeue();
+      stack.push(n);
       cout << "Digit" << endl;
     }
     else if (queue -> peek() == '+' ||
@@ -200,20 +205,22 @@ void build(Queue* queue, Stack stack, Node* root) {
       Node* temp = queue -> dequeue();
       if (queue -> peek() == '$') {
 	root = temp;
-	Node* r = new Node(stack.pop());
+	Node* r = stack.treePop();
 	root -> setRight(r);
 	r -> setPrev(root);
-	Node* l = new Node(stack.pop());
+	Node* l = stack.treePop();
 	root -> setLeft(l);
 	l -> setPrev(root);
 	cout << "root" << endl;
+	postf(root);
+	cout << endl;
 	break;
       }
       else {
-	Node* r = new Node(stack.pop());
+	Node* r = stack.treePop();
 	temp -> setRight(r);
 	r -> setPrev(temp);
-	Node* l = new Node(stack.pop());
+	Node* l = stack.treePop();
 	temp -> setLeft(l);
 	l -> setPrev(temp);
 	stack.push(temp);
@@ -230,6 +237,16 @@ void build(Queue* queue, Stack stack, Node* root) {
 
 void postf (Node* current) {
   // Similar to heap print ** HINT: USE RECURSION **
+  //cout << "post" << endl;
+  //cout << current -> getValue();
+  if (current -> getLeft() != NULL) { // Checking Right
+    postf(current -> getLeft());
+  }
+  if (current -> getRight() != NULL) { //Checking Left
+    //cout << "right" << endl;
+    postf(current -> getRight());
+  }
+  cout << current -> getValue();
 }
 
 void pref (Node* current) {

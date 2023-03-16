@@ -40,12 +40,29 @@ char Stack::pop() {
   }
 }
 
+Node* Stack::treePop() {
+  if (head == NULL) {
+    cout << "Stack is empty" << endl;
+    return NULL;
+  }
+  else {
+    Node* temps = head;
+    if (head -> getNext() != NULL) {
+      head = head -> getNext();
+      return temps;
+    }
+    else {
+      head = NULL;
+      return temps;
+    }
+  }
+
+}
+
 char Stack::peek() {
   if (head != NULL) {
     return head -> getValue();
   }
-  else {
-    return '$';
-  }
+  return '$';
 }
 

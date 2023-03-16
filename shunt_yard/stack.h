@@ -11,6 +11,7 @@ public:
   //~Stack();
   void push(Node*);
   char pop();
+  Node* treePop();
   char peek();
 private:
   Node* head;
