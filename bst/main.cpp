@@ -6,7 +6,9 @@ using namespace std;
 
 void add(int a, Node* &b, Node* c);
 void print(Node* a, int b);
-void search(Node* a, int b, bool &c);
+bool search(Node* a, int b);
+Node* treeSearch(Node* a, int b);
+void del(Node* &a, int b);
 
 int main() {
   Node* root = NULL;
@@ -27,8 +29,25 @@ int main() {
     }
     if (strcmp(input, "SEARCH") == 0) {
       cout << "What number are you looking for?" << endl;
-      bool find;
-      search(root, number, find);
+      cin >> number;
+      cin.ignore(10, '\n');
+      if (search(root, number) == true) {
+	cout << input << " was found." << endl;
+      }
+      else {
+	cout << input << " was not found." << endl;
+      }
+    }
+    if (strcmp(input, "DELETE") == 0) {
+      cout << "What number are you looking for?" << endl;
+      cin >> number;
+      cin.ignore(10, '\n');
+      if (treeSearch(root, number) != NULL) {
+	del(root, number);
+      }
+      else {
+	cout << "Number is not in tree" << endl;
+      }
     }
     if (strcmp(input, "QUIT") == 0) {
       break;
@@ -49,6 +68,7 @@ void add(int input, Node* &root, Node* current) {
     else {
       Node* node = new Node(input);
       current -> setLeft(node);
+      current -> getLeft() -> setPrev(current);
     }
   }
   else {
@@ -58,6 +78,7 @@ void add(int input, Node* &root, Node* current) {
     else {
       Node* node = new Node(input);
       current -> setRight(node);
+      current -> getRight() -> setPrev(current);
     }
   }
 }
@@ -77,6 +98,77 @@ void print(Node* current, int depth) {
   }
 }
 
-void search(Node* current, int input, bool &find) {
+bool search(Node* current, int input) {
+  if (current == NULL) return false;
+  if (current -> getValue() == input) return true;
+  return search(current -> getRight(), input) + search(current -> getLeft(), input);
+
   
+  /*
+  if (current == NULL) {
+    return;
+  }
+  if (current -> getValue() < input) {
+    count = count+1;
+    search(current -> getLeft(), input, find, count);
+  }
+  else if (current -> getValue() > input){
+    count = count+1;
+    search(current -> getRight(), input, find, count);
+  }
+  else {
+    find = true;
+  }
+  */
 }
+
+void del(Node* &root, int input) {
+  while (treeSearch(root, input) != NULL) {
+    Node* target = treeSearch(root, input);
+    int numKids = (target -> getRight() != NULL) + (target -> getLeft() != NULL);
+    if (root -> getValue() == input) {
+      // Delete root
+    }
+    // 2 kids
+    if (numKids == 2) {
+      
+    }
+    // 1 Kids
+    else if (numKids == 1) {
+      Node* temp;
+      if (target -> getRight() != NULL) {
+	temp = target -> getRight();
+      }
+      else {
+	temp = target -> getLeft();
+      }
+      if (target -> getPrev() -> getRight() == target) {
+        target -> getPrev() -> setRight(temp);
+      }
+      else {
+        target -> getPrev() -> setLeft(temp);
+      }
+      delete target;
+    }
+    // 0 Kids
+    else {
+      if (target -> getPrev() -> getRight() == target) {
+	target -> getPrev() -> setRight(NULL);
+      }
+      else {
+	target -> getPrev() -> setLeft(NULL);
+      }
+      delete target;
+    }
+  }
+}
+
+Node* treeSearch(Node* current, int input) {
+  if (current == NULL) return NULL;
+  if (current -> getValue() == input) return current;
+  Node* right = treeSearch(current -> getRight(), input);
+  Node* left = treeSearch(current -> getLeft(), input);
+  if (right != NULL) return right;
+  return left;
+}
+
