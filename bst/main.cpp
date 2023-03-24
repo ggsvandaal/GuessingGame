@@ -9,6 +9,7 @@ void print(Node* a, int b);
 bool search(Node* a, int b);
 Node* treeSearch(Node* a, int b);
 void del(Node* &a, int b);
+Node* inos(Node* a);
 
 int main() {
   Node* root = NULL;
@@ -126,12 +127,44 @@ void del(Node* &root, int input) {
   while (treeSearch(root, input) != NULL) {
     Node* target = treeSearch(root, input);
     int numKids = (target -> getRight() != NULL) + (target -> getLeft() != NULL);
-    if (root -> getValue() == input) {
-      // Delete root
-    }
     // 2 kids
     if (numKids == 2) {
-      
+      Node* temp = inos(target -> getRight());
+      cout << "In order successor: " << temp -> getValue() << endl;
+      if (temp -> getRight() != NULL) {
+	// Deleting root
+	if (target -> getPrev() == NULL) {
+	  temp -> getPrev() -> setRight(NULL);
+	  temp -> setPrev(NULL);
+	  temp -> setLeft(target -> getLeft());
+	  delete target;
+	}
+	else if (target -> getPrev() -> getRight() == target) {
+	  temp -> getPrev() -> setRight(NULL);
+	  temp -> setPrev(target -> getPrev());
+	  target -> getPrev() -> setRight(temp);
+	  temp -> setLeft(target -> getLeft());
+	  delete target;
+	}
+	else {
+	  temp -> getPrev() -> setRight(NULL);
+          temp -> setPrev(target -> getPrev());
+          target -> getPrev() -> setLeft(temp);
+          temp -> setLeft(target -> getLeft());
+	  delete target;
+	}
+      }
+      else {
+	int replace = temp -> getValue();
+	target -> setValue(replace);
+	if (temp -> getPrev() -> getRight() == temp) {
+	  temp -> getPrev() -> setRight(NULL);
+	}
+	else {
+	  temp -> getPrev() -> setLeft(NULL);
+	}
+	delete temp;
+      }
     }
     // 1 Kids
     else if (numKids == 1) {
@@ -163,6 +196,7 @@ void del(Node* &root, int input) {
   }
 }
 
+
 Node* treeSearch(Node* current, int input) {
   if (current == NULL) return NULL;
   if (current -> getValue() == input) return current;
@@ -170,5 +204,12 @@ Node* treeSearch(Node* current, int input) {
   Node* left = treeSearch(current -> getLeft(), input);
   if (right != NULL) return right;
   return left;
+}
+
+Node* inos(Node* current) {
+  if (current -> getLeft() == NULL) {
+    return current;
+  }
+  return inos(current -> getLeft());
 }
 
