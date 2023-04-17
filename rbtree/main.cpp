@@ -19,7 +19,7 @@ Node* treeSearch(Node* a, int b); // Tree Search Function (For nodes)
 void del(Node* &a, int b); // Delete Function 
 Node* inos(Node* a); // In Order Succesor Function
 void addFile(Node* &a); // Add from file Function
-void adjust(Node* &a, Node* &b);
+void adjust(Node* a, Node* &b);
 
 // Main Function //
 
@@ -135,11 +135,17 @@ void add(int input, Node* &root, Node* current) {
 
 // Adjsust Function //
 
-void adjust(Node* &input, Node* &root) {
+void adjust(Node* input, Node* &root) {
   if (input == root) {
     input -> setBlack();
   }
-  if () {
+  if (input -> getParent() != NULL && input -> getUnc(input) != NULL) {
+    if (input -> getParent() -> getColor() == 'r' && input -> getUnc(input) -> getColor() == 'r') {
+      input -> getParent() -> setBlack();
+      input -> getUnc(input) -> setBlack();
+      input -> getGrand(input) -> setRed();
+      adjust(input -> getGrand(input), root);
+    }
   }
 }
 

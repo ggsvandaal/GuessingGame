@@ -60,17 +60,23 @@ Node* Node::getGrand(Node* input) {
 }
 
 Node* Node::getUnc(Node* input) {
-  if (input -> getGrand(input) -> getRight() == input -> getParent()) {
-    return input -> getGrand(input) -> getLeft();
+  if (input -> getParent() != NULL && input -> getSib(input -> getParent()) != input -> getParent()) {
+    return input -> getParent() -> getSib(input -> getParent());
   }
-  return input -> getGrand(input) -> getRight();
+  return input;
 }
 
 Node* Node::getSib(Node* input) {
-  if (input -> getParent() -> getRight() == input) {
-    return input -> getParent() -> getLeft();
+  if (input -> getParent() != NULL) {
+    if (input -> getParent() -> getRight() == input) {
+      cout << "left sib" << flush;
+      return input -> getParent() -> getLeft();
+    }
+    cout << "right sib" << flush;
+    return input -> getParent() -> getRight();
   }
-  return input -> getParent() -> getLeft();
+  cout << "NO SIB" << flush;
+  return input;
 }
 
 char Node::getColor() {
