@@ -69,13 +69,10 @@ Node* Node::getUnc(Node* input) {
 Node* Node::getSib(Node* input) {
   if (input -> getParent() != NULL) {
     if (input -> getParent() -> getRight() == input) {
-      cout << "left sib" << flush;
       return input -> getParent() -> getLeft();
     }
-    cout << "right sib" << flush;
     return input -> getParent() -> getRight();
   }
-  cout << "NO SIB" << flush;
   return input;
 }
 

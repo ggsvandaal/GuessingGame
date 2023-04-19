@@ -20,6 +20,8 @@ void del(Node* &a, int b); // Delete Function
 Node* inos(Node* a); // In Order Succesor Function
 void addFile(Node* &a); // Add from file Function
 void adjust(Node* a, Node* &b);
+void leftRotate(Node* &a);
+void rightRotate(Node* &a);
 
 // Main Function //
 
@@ -147,6 +149,62 @@ void adjust(Node* input, Node* &root) {
       adjust(input -> getGrand(input), root);
     }
   }
+  if (input -> getParent() != NULL) {
+    bool uncBlack = false;
+    if (input -> getUnc(input) == NULL) {
+      uncBlack = true;
+    }
+    else {
+      if (input -> getUnc(input) -> getColor() == 'b') {
+	uncBlack = true;
+      }
+    }
+    if (input -> getParent() -> getColor() == 'r' && uncBlack == true) {
+      if (input -> getGrand(input) -> getRight() == input -> getParent()) {
+	if (input -> getParent() -> getLeft() == input) {
+	  cout << "right rotate" << endl;
+	  rightRotate(input);
+	  
+	}
+      }
+      else if (input -> getGrand(input) -> getLeft() == input -> getParent()) {
+	if (input -> getParent() -> getRight() == input) {
+	  cout << "left rotate" << endl;
+	  leftRotate(input);
+	}
+      }
+    }
+  }
+}
+
+void leftRotate(Node* &node) {
+  Node* parent = node -> getParent();
+  Node* grand = node -> getGrand(node);
+  if (grand != NULL) {
+    grand -> setLeft(node);
+    node -> setParent(grand);
+  }
+  parent -> setRight(node -> getLeft());
+  if (parent -> getRight() != NULL) {
+    parent -> getRight() -> setParent(parent);
+  }
+  parent -> setParent(node);
+  node -> setLeft(parent);
+}
+
+void rightRotate(Node* &node) {
+  Node* parent = node -> getParent();
+  Node* grand = node -> getGrand(node);
+  if (grand != NULL) {
+    grand -> setRight(node);
+    node -> setParent(grand);
+  }
+  parent -> setLeft(node -> getLeft());
+  if (parent -> getLeft() != NULL) {
+    parent -> getLeft() -> setParent(parent);
+  }
+  parent -> setParent(node);
+  node -> setRight(parent);
 }
 
 // Print Function //
