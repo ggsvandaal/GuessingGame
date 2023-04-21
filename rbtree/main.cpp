@@ -164,13 +164,42 @@ void adjust(Node* input, Node* &root) {
 	if (input -> getParent() -> getLeft() == input) {
 	  cout << "right rotate" << endl;
 	  rightRotate(input);
-	  
+	  adjust(input -> getRight(), root);
+	}
+	else if (input -> getParent() -> getRight() == input) {
+	  bool trial = false;
+	  Node* temp = input -> getGrand(input);
+	  if (temp == root) {
+	    trial = true;
+	  }
+	  Node* parent = input -> getParent();
+	  leftRotate(parent);
+	  input -> getParent() -> setBlack();
+	  temp -> setRed();
+	  if (trial == true) {
+	    root = parent;
+	  }
 	}
       }
       else if (input -> getGrand(input) -> getLeft() == input -> getParent()) {
 	if (input -> getParent() -> getRight() == input) {
 	  cout << "left rotate" << endl;
 	  leftRotate(input);
+	  adjust(input -> getLeft(), root);
+	}
+	else if (input -> getParent() -> getLeft() == input) {
+	  bool trial = false;
+	  Node* temp = input -> getGrand(input);
+	  if (temp == root) {
+	    trial = true;
+	  }
+	  Node* parent = input -> getParent();
+	  rightRotate(parent);
+	  input -> getParent() -> setBlack();
+	  temp -> setRed();
+	  if (trial == true) {
+	    root = parent;
+	  }
 	}
       }
     }
@@ -181,13 +210,18 @@ void leftRotate(Node* &node) {
   Node* parent = node -> getParent();
   Node* grand = node -> getGrand(node);
   if (grand != NULL) {
-    grand -> setLeft(node);
+    if (grand -> getRight() == parent) {
+      grand -> setRight(node);
+    }
+    else {
+      grand -> setLeft(node);
+    }
     node -> setParent(grand);
   }
   parent -> setRight(node -> getLeft());
-  if (parent -> getRight() != NULL) {
-    parent -> getRight() -> setParent(parent);
-  }
+  //if (parent -> getRight() != NULL) {
+    // parent -> getRight() -> setParent(parent);
+    //}
   parent -> setParent(node);
   node -> setLeft(parent);
 }
@@ -196,7 +230,12 @@ void rightRotate(Node* &node) {
   Node* parent = node -> getParent();
   Node* grand = node -> getGrand(node);
   if (grand != NULL) {
-    grand -> setRight(node);
+    if (grand -> getRight() == parent) {
+      grand -> setRight(node);
+    }
+    else {
+      grand -> setLeft(node);
+    }
     node -> setParent(grand);
   }
   parent -> setLeft(node -> getLeft());
