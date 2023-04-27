@@ -204,6 +204,9 @@ void adjust(Node* input, Node* &root) {
       }
     }
   }
+  if (input -> getValue() == 8) {
+    cout << "yes" << endl;
+  }
 }
 
 void leftRotate(Node* &node) {
@@ -219,9 +222,9 @@ void leftRotate(Node* &node) {
     node -> setParent(grand);
   }
   parent -> setRight(node -> getLeft());
-  //if (parent -> getRight() != NULL) {
-    // parent -> getRight() -> setParent(parent);
-    //}
+  if (parent -> getLeft() != NULL) {
+    node -> getLeft() -> setParent(parent);
+  }
   parent -> setParent(node);
   node -> setLeft(parent);
 }
@@ -238,12 +241,13 @@ void rightRotate(Node* &node) {
     }
     node -> setParent(grand);
   }
-  parent -> setLeft(node -> getLeft());
-  if (parent -> getLeft() != NULL) {
-    parent -> getLeft() -> setParent(parent);
+  parent -> setLeft(node -> getRight());
+  if (parent -> getRight() != NULL) {
+    parent -> getRight() -> setParent(parent);
   }
   parent -> setParent(node);
   node -> setRight(parent);
+  
 }
 
 // Print Function //
