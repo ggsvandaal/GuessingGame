@@ -1,6 +1,6 @@
 /*
   Author: Samual van Daal
-  Date: 
+  Date: 4/28/2023
   Red-Black Tree
 */
 
@@ -19,9 +19,9 @@ Node* treeSearch(Node* a, int b); // Tree Search Function (For nodes)
 void del(Node* &a, int b); // Delete Function 
 Node* inos(Node* a); // In Order Succesor Function
 void addFile(Node* &a); // Add from file Function
-void adjust(Node* a, Node* &b);
-void leftRotate(Node* &a);
-void rightRotate(Node* &a);
+void adjust(Node* a, Node* &b);// Adjust Function (For Red-Black Tree) Line 138
+void leftRotate(Node* &a); // Left Rotation Function
+void rightRotate(Node* &a); // Right Rotation Function
 
 // Main Function //
 
@@ -138,19 +138,29 @@ void add(int input, Node* &root, Node* current) {
 // Adjsust Function //
 
 void adjust(Node* input, Node* &root) {
-  if (input == root) {
-    input -> setBlack();
+  
+  // Case 1 Check
+  if (input == root) { 
+    input -> setBlack(); // Root is always black
   }
+
+  // Case 3 Check
   if (input -> getParent() != NULL && input -> getUnc(input) != NULL) {
     if (input -> getParent() -> getColor() == 'r' && input -> getUnc(input) -> getColor() == 'r') {
+      
+      // Swap Colors of Parent and Grandparent
       input -> getParent() -> setBlack();
       input -> getUnc(input) -> setBlack();
       input -> getGrand(input) -> setRed();
+      // Check to see if colorswap changed anything else in the tree
       adjust(input -> getGrand(input), root);
     }
   }
+
+  // Case 4 & 5 Check
   if (input -> getParent() != NULL) {
     bool uncBlack = false;
+    // Check if Uncle is Black or NULL
     if (input -> getUnc(input) == NULL) {
       uncBlack = true;
     }
@@ -159,13 +169,16 @@ void adjust(Node* input, Node* &root) {
 	uncBlack = true;
       }
     }
+    // Check if Parent is red and uncle is black
     if (input -> getParent() -> getColor() == 'r' && uncBlack == true) {
+      // Check Right
       if (input -> getGrand(input) -> getRight() == input -> getParent()) {
+	// Case 4
 	if (input -> getParent() -> getLeft() == input) {
-	  cout << "right rotate" << endl;
 	  rightRotate(input);
 	  adjust(input -> getRight(), root);
 	}
+	// Case 5
 	else if (input -> getParent() -> getRight() == input) {
 	  bool trial = false;
 	  Node* temp = input -> getGrand(input);
@@ -178,18 +191,23 @@ void adjust(Node* input, Node* &root) {
 	  temp -> setRed();
 	  if (trial == true) {
 	    root = parent;
+	    if (root -> getParent() != NULL) {
+	      root -> setParent(NULL);
+	    }
 	  }
 	}
       }
+      // Check Left
       else if (input -> getGrand(input) -> getLeft() == input -> getParent()) {
+	bool trial = false;
+        Node* temp = input -> getGrand(input);
+	// Case 4
 	if (input -> getParent() -> getRight() == input) {
-	  cout << "left rotate" << endl;
 	  leftRotate(input);
 	  adjust(input -> getLeft(), root);
 	}
+	// Case 5
 	else if (input -> getParent() -> getLeft() == input) {
-	  bool trial = false;
-	  Node* temp = input -> getGrand(input);
 	  if (temp == root) {
 	    trial = true;
 	  }
@@ -199,19 +217,22 @@ void adjust(Node* input, Node* &root) {
 	  temp -> setRed();
 	  if (trial == true) {
 	    root = parent;
+	    if (root -> getParent() != NULL) {
+	      root -> setParent(NULL);
+	    }
 	  }
 	}
       }
     }
   }
-  if (input -> getValue() == 8) {
-    cout << "yes" << endl;
-  }
 }
+
+// Left Rotation Function //
 
 void leftRotate(Node* &node) {
   Node* parent = node -> getParent();
   Node* grand = node -> getGrand(node);
+  // Check to edit grandfather pointer
   if (grand != NULL) {
     if (grand -> getRight() == parent) {
       grand -> setRight(node);
@@ -221,13 +242,17 @@ void leftRotate(Node* &node) {
     }
     node -> setParent(grand);
   }
+  // Edit parent pointer
   parent -> setRight(node -> getLeft());
   if (parent -> getLeft() != NULL) {
     node -> getLeft() -> setParent(parent);
   }
   parent -> setParent(node);
+  // Edit Node
   node -> setLeft(parent);
 }
+
+// Right Rotation Function //
 
 void rightRotate(Node* &node) {
   Node* parent = node -> getParent();
@@ -261,7 +286,7 @@ void print(Node* current, int depth) {
     cout << '\t';
   }
   cout << current -> getColor() <<current -> getValue() << endl; // Printing
-
+  
   if (current -> getLeft() != NULL) { //Checking Left
     print(current -> getLeft(), depth+1); // Recurse
   }
