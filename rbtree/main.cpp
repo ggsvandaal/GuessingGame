@@ -22,6 +22,7 @@ void addFile(Node* &a); // Add from file Function
 void adjust(Node* a, Node* &b);// Adjust Function (For Red-Black Tree) Line 138
 void leftRotate(Node* &a); // Left Rotation Function
 void rightRotate(Node* &a); // Right Rotation Function
+char checkChild(Node* a);
 
 // Main Function //
 
@@ -310,55 +311,51 @@ void del(Node* &root, int input) {
   while (treeSearch(root, input) != NULL) {
     Node* target = treeSearch(root, input); // Seach tree for target
     int numKids = (target -> getRight() != NULL) + (target -> getLeft() != NULL); // Count the number of children
-
-    // 2 children 
-    if (numKids == 2) {
-      Node* temp = inos(target -> getRight()); // Find in order succesor
-      //cout << "In order successor: " << temp -> getValue() << endl;
-      target -> setValue(temp -> getValue()); // Set target value to in order succesor
-      temp -> getParent() -> setRight(temp -> getRight()); // Remove in order succesor from tree
-      delete temp; // Delete in order succesor
-    }
-    
-    // 1 child
-    else if (numKids == 1) {
-      Node* temp;
-      if (target -> getRight() != NULL) { // If child is right
-	temp = target -> getRight(); // Set child
-      }
-      else { // If child is left
-	temp = target -> getLeft(); // Set child
-      }
-      if (target == root) { // If deleting root
-        target = temp; // Set root to child
-      }
-      else {
-	if (target -> getParent() -> getRight() == target) { // If child is right
-	  target -> getParent() -> setRight(temp); // Remove target from tree
+    if (target -> getColor() == 'r') {
+      if (numKids == 0) {
+	// check righ
+	if (checkChild(target) == 'r') {
+	  
 	}
-	else { // If child is left
-	  target -> getParent() -> setLeft(temp); // Remove target from tree
+	// check left
+	// else (root)
+      }
+      // Red Deletion
+      else if (numKids == 1) {
+	if (target -> getRight() != NULL) {
+	  if (target -> getParent() -> getRight() == target) {
+	    target -> getParent() -> setRight(target -> getRight());
+	  }
+	  else {
+	    target -> getParent() -> setLeft(target -> getRight());
+	  }
+	  target -> getRight() -> setParent(target -> getParent());
 	}
-	delete target; // Delete target
+	else {
+	  if (target -> getParent() -> getRight() == target) {
+	    target -> getParent() -> setRight(target -> getLeft());
+	  }
+	  else {
+	    target -> getParent() -> setLeft(target -> getLeft());
+	  }
+	  target -> getRight() -> setParent(target -> getParent());
+	}
+	delete target;
       }
     }
-    
-    // 0 Children
     else {
-      if (target == root) { // If target is root
-	target == NULL; // Set to NULL
-      }
-      else {
-	if (target -> getParent() -> getRight() == target) { // If target is a right child
-	  target -> getParent() -> setRight(NULL); // NULL right of previous
+      if (numKids == 0) {
+	if (target == root) {
+	  target = NULL;
 	}
-	else { // If target is a left child
-	  target -> getParent() -> setLeft(NULL); // NULL left of previous
+	else {
 	}
-	delete target; // Delete target
       }
     }
   }
+}
+
+void delFix(Node* target, Node* &root) {
 }
 
 // Tree Search Function //
@@ -401,3 +398,12 @@ void addFile(Node* &root) {
   }
 }
 
+char childCheck(Node* input) {
+  if (input -> getParent() == NULL) {
+    return ' ';
+  }
+  if (input -> getParent() -> getRight() == input) {
+    return 'r';
+  }
+  return 'l';
+}
