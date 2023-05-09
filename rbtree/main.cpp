@@ -23,6 +23,7 @@ void adjust(Node* a, Node* &b);// Adjust Function (For Red-Black Tree) Line 138
 void leftRotate(Node* &a); // Left Rotation Function
 void rightRotate(Node* &a); // Right Rotation Function
 char checkChild(Node* a);
+int delFix(Node* a, Node* &b, int c);
 
 // Main Function //
 
@@ -311,16 +312,20 @@ void del(Node* &root, int input) {
   while (treeSearch(root, input) != NULL) {
     Node* target = treeSearch(root, input); // Seach tree for target
     int numKids = (target -> getRight() != NULL) + (target -> getLeft() != NULL); // Count the number of children
+
+    // Red Deletion
     if (target -> getColor() == 'r') {
       if (numKids == 0) {
-	// check righ
-	if (checkChild(target) == 'r') {
-	  
+	// check right
+        if (checkChild(target) == 'r') {
+	  target -> getParent() -> setRight(NULL);
+	  delete target;
+        }
+        else if (checkChild(target) == 'l') {
+	  target -> getParent() -> setLeft(NULL);
+	  delete target;
 	}
-	// check left
-	// else (root)
       }
-      // Red Deletion
       else if (numKids == 1) {
 	if (target -> getRight() != NULL) {
 	  if (target -> getParent() -> getRight() == target) {
@@ -342,20 +347,43 @@ void del(Node* &root, int input) {
 	}
 	delete target;
       }
+      else if (numKids == 2) {
+	target -> setValue(delFix(inos(target), root, 0));
+      }
     }
     else {
-      if (numKids == 0) {
-	if (target == root) {
-	  target = NULL;
+      if (numKids == 2) {
+	target -> setValue(delFix(inos(target), root, 0));
+      }
+      else if (numKids == 1) {
+	if (target -> getRight() != NULL) {
+	  target -> setValue(delFix(target -> getRight(), root, 0));
 	}
 	else {
+	  target -> setValue(delFix(target -> getLeft(), root, 0));
+	}
+      }
+      else if (numKids == 0) {
+	int value = delFix(target, root, 0);
+	if (target == root) {
+	  target == NULL;
+	  // Not working
+	}
+	else {
+	  delete target;
 	}
       }
     }
   }
 }
 
-void delFix(Node* target, Node* &root) {
+int delFix(Node* current, Node* &root, int value) {
+  cout << "delete fix" << endl;
+  // Case 1
+  if (current == root) {
+    return value;
+  }
+  return 0;
 }
 
 // Tree Search Function //
@@ -398,7 +426,7 @@ void addFile(Node* &root) {
   }
 }
 
-char childCheck(Node* input) {
+char checkChild(Node* input) {
   if (input -> getParent() == NULL) {
     return ' ';
   }
