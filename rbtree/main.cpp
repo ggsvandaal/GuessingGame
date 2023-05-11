@@ -349,6 +349,7 @@ void del(Node* &root, int input) {
       }
       else if (numKids == 2) {
 	target -> setValue(delFix(inos(target), root, 0));
+	// Unfisnished
       }
     }
     else {
@@ -357,17 +358,16 @@ void del(Node* &root, int input) {
       }
       else if (numKids == 1) {
 	if (target -> getRight() != NULL) {
-	  target -> setValue(delFix(target -> getRight(), root, 0));
+	  target -> setValue(delFix(target, root, 0));
 	}
 	else {
-	  target -> setValue(delFix(target -> getLeft(), root, 0));
+	  target -> setValue(delFix(target, root, 0));
 	}
       }
       else if (numKids == 0) {
 	int value = delFix(target, root, 0);
-	if (target == root) {
-	  target == NULL;
-	  // Not working
+	if (target = root) {
+	  root = NULL;
 	}
 	else {
 	  delete target;
@@ -382,6 +382,25 @@ int delFix(Node* current, Node* &root, int value) {
   // Case 1
   if (current == root) {
     return value;
+  }
+  // Case 2
+  if (current -> getSib(current) -> getColor() == 'r') {
+    current -> getSib(current) -> setBlack();
+    current -> getParent() -> setRed();
+    Node* sib = current -> getSib(current);
+    if (checkChild(current) == 'r') {
+      rightRotate(sib);
+    }
+    else {
+      leftRotate(sib);
+    }
+    value = delFix(current, root, value);
+  }
+  // Case 3
+  if (current -> getSib(current) -> getColor() == 'b') {
+    // Unfinished (everthing needs to be black. Change get Color to check for NULL)
+    current  -> getSib(current) -> setRed();
+    value = delFix(current -> getParent(), root, value);
   }
   return 0;
 }
