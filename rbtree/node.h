@@ -22,7 +22,7 @@ public:
   Node* getGrand(Node*); // Get the Grand Parent node
   Node* getUnc(Node*);
   Node* getSib(Node*);
-  char getColor();
+  char getColor(Node*);
   void setBlack();
   void setRed();
   

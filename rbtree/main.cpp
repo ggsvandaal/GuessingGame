@@ -148,7 +148,7 @@ void adjust(Node* input, Node* &root) {
 
   // Case 3 Check
   if (input -> getParent() != NULL && input -> getUnc(input) != NULL) {
-    if (input -> getParent() -> getColor() == 'r' && input -> getUnc(input) -> getColor() == 'r') {
+    if (input -> getParent() -> getColor(input -> getParent()) == 'r' && input -> getUnc(input) -> getColor(input -> getUnc(input)) == 'r') {
       
       // Swap Colors of Parent and Grandparent
       input -> getParent() -> setBlack();
@@ -167,12 +167,12 @@ void adjust(Node* input, Node* &root) {
       uncBlack = true;
     }
     else {
-      if (input -> getUnc(input) -> getColor() == 'b') {
+      if (input -> getUnc(input) -> getColor(input -> getUnc(input)) == 'b') {
 	uncBlack = true;
       }
     }
     // Check if Parent is red and uncle is black
-    if (input -> getParent() -> getColor() == 'r' && uncBlack == true) {
+    if (input -> getParent() -> getColor(input -> getParent()) == 'r' && uncBlack == true) {
       // Check Right
       if (input -> getGrand(input) -> getRight() == input -> getParent()) {
 	// Case 4
@@ -287,7 +287,7 @@ void print(Node* current, int depth) {
   for (int i = 0; i < depth; i++) { // Adding Indents
     cout << '\t';
   }
-  cout << current -> getColor() <<current -> getValue() << endl; // Printing
+  cout << current -> getColor(current) << current -> getValue() << endl; // Printing
   
   if (current -> getLeft() != NULL) { //Checking Left
     print(current -> getLeft(), depth+1); // Recurse
@@ -314,7 +314,7 @@ void del(Node* &root, int input) {
     int numKids = (target -> getRight() != NULL) + (target -> getLeft() != NULL); // Count the number of children
 
     // Red Deletion
-    if (target -> getColor() == 'r') {
+    if (target -> getColor(target) == 'r') {
       if (numKids == 0) {
 	// check right
         if (checkChild(target) == 'r') {
@@ -366,10 +366,17 @@ void del(Node* &root, int input) {
       }
       else if (numKids == 0) {
 	int value = delFix(target, root, 0);
-	if (target = root) {
+	cout << "0 Kid Deletion" << endl;
+	if (target == root) {
 	  root = NULL;
 	}
 	else {
+	  if (checkChild(target) == 'r') {
+	    target -> getParent() -> setRight(NULL);
+	  }
+	  else {
+	    target -> getParent() -> setLeft(NULL);
+	  }
 	  delete target;
 	}
       }
@@ -381,10 +388,11 @@ int delFix(Node* current, Node* &root, int value) {
   cout << "delete fix" << endl;
   // Case 1
   if (current == root) {
+    cout << "End Case 1" << endl;
     return value;
   }
   // Case 2
-  if (current -> getSib(current) -> getColor() == 'r') {
+  if (current -> getSib(current) -> getColor(current -> getSib(current)) == 'r') {
     current -> getSib(current) -> setBlack();
     current -> getParent() -> setRed();
     Node* sib = current -> getSib(current);
@@ -394,13 +402,24 @@ int delFix(Node* current, Node* &root, int value) {
     else {
       leftRotate(sib);
     }
+    cout << "End Case 2" << endl;
     value = delFix(current, root, value);
   }
-  // Case 3
-  if (current -> getSib(current) -> getColor() == 'b') {
-    // Unfinished (everthing needs to be black. Change get Color to check for NULL)
-    current  -> getSib(current) -> setRed();
-    value = delFix(current -> getParent(), root, value);
+  Node* sib = current -> getSib(current);
+  // Case 3 & 4
+  if (sib != NULL) {
+    if (sib -> getColor(sib) == 'b' && current -> getColor(current) == 'b' && sib -> getRight() -> getColor(sib -> getRight()) == 'b' && sib -> getLeft() -> getColor(sib -> getLeft()) == 'b') {
+      // Case 4
+      if (current -> getParent() -> getColor(current -> getParent()) == 'r') {
+	// Change get Color to ignore outside and focus on inside.
+      }
+      // Case 3
+      else {
+      current  -> getSib(current) -> setRed();
+      cout << "End Case 3" << endl;  
+      value = delFix(current -> getParent(), root, value);
+      }
+    }
   }
   return 0;
 }

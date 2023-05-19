@@ -76,7 +76,10 @@ Node* Node::getSib(Node* input) {
   return input;
 }
 
-char Node::getColor() {
+char Node::getColor(Node* input) {
+  if (input == NULL) {
+    return 'b';
+  }
   return color;
 }
 
