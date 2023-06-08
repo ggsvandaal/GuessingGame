@@ -15,6 +15,7 @@ using namespace std;
 void addVertex(vector<vector<int>>& matrix, vector<char*>& nodeList, char* label);
 void addEdge(vector<vector<int>>& matrix, vector<char*> nodeList, char* a, char* b, int c);
 void deleteEdge(vector<vector<int>>& matrix, vector<char*> nodeList, char* a, char* b);
+void delVert(vector<vector<int>>& matrix, vector<char*>& nodeList, char* a);
 void printMatrix(vector<vector<int>> matrix, vector<char*> nodeList);
 
 
@@ -60,7 +61,11 @@ int main () {
 
     // Delete Vertex Input
     if (strcmp(input, "DELETE VERTEX") == 0) {
-      // Unfinished - Next in line
+      char* a = new char[20];
+      cout << "Which vertex do you want to delete?" << endl;
+      cin.get(a, 20);
+      cin.ignore(10, '\n');
+      delVert(matrix, nodeList, a);
     }
 
     // Delete Edge Input
@@ -129,7 +134,7 @@ void addEdge(vector<vector<int>>& matrix, vector<char*> nodeList, char* a, char*
 void deleteEdge(vector<vector<int>>& matrix, vector<char*> nodeList, char* a, char*b) {
   int av = -1;
   int bv = -1;
-  for (int i = 0; i < nodeList.size(); i++) {
+  for (int i = 0; i < nodeList.size()-1; i++) {
     if (strcmp(nodeList[i], a) == 0) {
       av = i;
     }
@@ -143,6 +148,40 @@ void deleteEdge(vector<vector<int>>& matrix, vector<char*> nodeList, char* a, ch
   else {
     matrix[av][bv] = 0;
   }
+}
+
+void delVert(vector<vector<int>>& matrix, vector<char*>& nodeList, char* input) {
+  cout << "Not currently working" << endl;
+  /*
+  vector<vector<int>>::iterator itr1;
+  vector<int>::iterator itr2;
+  vector<char*>::iterator itrc;
+  int a = 1;
+  int b = 0;
+  for (itrc = nodeList.begin(); itrc != nodeList.end(); itrc++) {
+    if (strcmp(*itrc, input) == 0) {
+      nodeList.erase(itrc);
+      break;
+    }
+  }
+  int size = matrix.size();
+  for (itr1 = matrix.begin(); itr1 != matrix.end(); itr1++) {
+    cout << "Got here" << endl;
+    for (itr2 = itr1->begin(); itr2 != itr1->end(); itr2++) {
+      cout << *itr2 << endl;
+      if (b == a) { // Problem Child
+	matrix[a].erase(itr2);
+	return;
+      }
+    }
+  }
+  for (itr1 = matrix.begin(); itr1 != matrix.end(); itr1++) {
+    if (b == a) { // Problem Child
+      matrix.erase(itr1);
+      return;
+    }
+  }
+  */
 }
 
 // Print Matrix Function //
